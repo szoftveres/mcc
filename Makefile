@@ -29,7 +29,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.c
 
 ## Link object files to build the compiler
 $(PROGRAM): $(SUBDIRS) $(OBJECTS)
-	ar rcs $(PROGRAM).a $(OBJECTS) lex/lex.o
+	ar rcs $(PROGRAM).a $(OBJECTS) lex/lex.a
 
 clean:
 	-rm -rf $(OBJECTS) $(OUTDIR)/$(PROGRAM).a 
