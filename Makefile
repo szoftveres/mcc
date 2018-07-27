@@ -32,7 +32,7 @@ $(PROGRAM): $(SUBDIRS) $(OBJECTS)
 	ar rcs $(PROGRAM).a $(OBJECTS)
 
 clean:
-	-rm -rf $(OBJECTS) $(OUTDIR)/$(PROGRAM) 
+	-rm -rf $(OBJECTS) $(OUTDIR)/$(PROGRAM).a 
 	for dir in $(SUBDIRS); do $(MAKE) clean -C $$dir; done
 
 
