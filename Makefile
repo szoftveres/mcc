@@ -20,7 +20,7 @@ SUBDIRS = lex
 all: $(PROGRAM)
 
 $(SUBDIRS):
-	git submodule update --init --recursive
+	git submodule update --init
 	$(MAKE) -C $@
 
 ## Compile source files
