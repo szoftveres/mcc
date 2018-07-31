@@ -463,112 +463,51 @@ int primary_expression (void) {
 }
 
 
-int binary_operation (int precedence) {
+int get_op_precedence (int op) {
+    switch (op) {
+      case T_LOR :              /* || */
+        return 0;
+      case T_LAND :             /* && */
+        return 1;
+      case T_BWOR :             /* | */
+        return 2;
+      case T_BWXOR :            /* ^ */
+        return 3;
+      case T_BWAND :            /* & */
+        return 4;
+      case T_EQ :               /* == */
+      case T_NEQ :              /* != */
+        return 5;
+      case T_LESS :             /* < */
+      case T_GREATER :          /* > */
+      case T_LEQ :              /* <= */
+      case T_GREQ :             /* >= */
+        return 6;
+      case T_SLEFT :            /* << */
+      case T_SRIGHT :           /* >> */
+        return 7;
+      case T_PLUS :             /* + */
+      case T_MINUS :            /* - */
+        return 8;
+      case T_MUL :              /* * */
+      case T_DIV :              /* / */
+      case T_MOD :              /* % */
+        return 9;
+      default:
+        return -1;              /* Not a binary operator */
+    }
+}
+
+int binary_operation (int min_prec) {
     int op;
+    int prec;
 
-    op = token;
-    switch (precedence) {
-      case 9:
-        switch (op) {
-          case T_MUL :              /* * */
-          case T_DIV :              /* / */
-          case T_MOD :              /* % */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 8:
-        switch (op) {
-          case T_PLUS :             /* + */
-          case T_MINUS :            /* - */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 7:
-        switch (op) {
-          case T_SLEFT :            /* << */
-          case T_SRIGHT :           /* >> */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 6:
-        switch (op) {
-          case T_LESS :             /* < */
-          case T_GREATER :          /* > */
-          case T_LEQ :              /* <= */
-          case T_GREQ :             /* >= */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 5:
-        switch (op) {
-          case T_EQ :               /* == */
-          case T_NEQ :              /* != */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 4:
-        switch (op) {
-          case T_BWAND :            /* & */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 3:
-        switch (op) {
-          case T_BWXOR :            /* ^ */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 2:
-        switch (op) {
-          case T_BWOR :             /* | */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 1:
-        switch (op) {
-          case T_LAND :             /* && */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      case 0:
-        switch (op) {
-          case T_LOR :              /* || */
-          break;
-          default:
-          return (binary_operation(precedence + 1));
-        }
-        break;
-
-      default: return 0;
+    prec = get_op_precedence(token);
+    if (prec < min_prec) {
+        return 0;
     }
 
+    op = token;
     next_token();
 
     CODE_push_unsafe();
@@ -580,7 +519,7 @@ int binary_operation (int precedence) {
     }
 
     /* Subsequent higher precedence operations */
-    binary_operation(precedence + 1);
+    binary_operation(prec + 1);
 
     do_operations(op); /* sym_dist_inc is in do_operations */
 

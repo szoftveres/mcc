@@ -69,7 +69,7 @@ int fn_call (char* identifier);
 
 int fn_call_args (void);
 
-int binary_operation(int precedence);
+int binary_operation(int min_prec);
 
 void do_operations (int op_type);
 
